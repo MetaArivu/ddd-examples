@@ -52,7 +52,7 @@ public class Order {
 	private Double total;
 	
 	@Persistent(column = "status")
-	private String status;
+	private Status status;
 	
 	@Persistent(mappedBy = "order", defaultFetchGroup="true")
 	private Set<LineItem> lineItems;
@@ -72,7 +72,7 @@ public class Order {
 		this.setUserId(userId);
 		this.generateOrderNo();
 		this.initCart();
-		this.open();
+		this.markPaymentExepected();
 		this.total = 0.0;
 	}
 	
@@ -94,15 +94,18 @@ public class Order {
 	/**
 	 * Maps cart status as open
 	 */
-	public void open(){
-		this.status = "OPEN";
+	public void markPaymentExepected(){
+		this.status = Status.PAYMENT_EXPECTED;
 	}
 	
 	/**
 	 * Maps cart status as close
 	 */	
-	public void close(){
-		this.status = "CLOSE";
+	public void markPaid() throws InvalidDataException{
+		if(this.shippingAddress == null){
+			throw new InvalidDataException("Invalid state exception");
+		}
+		this.status = Status.PAID;
 	}
 	
 	/**
@@ -158,7 +161,7 @@ public class Order {
 	public void addPaymentDetails(String paymentmode) throws InvalidDataException{
 		Payment payment = new Payment(paymentmode, getTotal(), this);
 		this.payment = payment;
-		this.close();
+		this.markPaid();
 	}
 
 	/**
@@ -222,8 +225,8 @@ public class Order {
 	 * 
 	 * @return order status {@link String}
 	 */
-	public String getStatus() {
-		return status;
+	public boolean isPaid() {
+		return this.status.equals(Status.PAID);
 	}
 
 	/**
@@ -256,6 +259,32 @@ public class Order {
 	}
 
 	
-	
+	public static enum Status {
+
+		/**
+		 * Placed, but not payed yet. Still changeable.
+		 */
+		PAYMENT_EXPECTED,
+
+		/**
+		 * {@link Order} was payed. No changes allowed to it anymore.
+		 */
+		PAID,
+
+		/**
+		 * The {@link Order} is currently processed.
+		 */
+		PREPARING,
+
+		/**
+		 * The {@link Order} is ready to be picked up by the customer.
+		 */
+		READY,
+
+		/**
+		 * The {@link Order} was completed.
+		 */
+		TAKEN;
+	}
 	
 }
