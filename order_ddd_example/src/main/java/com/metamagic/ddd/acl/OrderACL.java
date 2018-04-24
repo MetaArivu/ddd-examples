@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-package com.metamagic.ddd.customjackson;
+package com.metamagic.ddd.acl;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ import com.metamagic.ddd.exception.InvalidDataException;
  * 
  */
 
-public class OrderDeserializer extends JsonDeserializer<Order>{
+public class OrderACL extends JsonDeserializer<Order>{
 	
 	@Override
 	public Order deserialize(JsonParser jsonParser, DeserializationContext des) throws IOException, JsonProcessingException {

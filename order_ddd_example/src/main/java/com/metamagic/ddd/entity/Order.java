@@ -28,10 +28,10 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.metamagic.ddd.customjackson.OrderDeserializer;
+import com.metamagic.ddd.acl.OrderACL;
 import com.metamagic.ddd.exception.InvalidDataException;
 
-@JsonDeserialize(using = OrderDeserializer.class)
+@JsonDeserialize(using = OrderACL.class)
 @PersistenceCapable(table = "order", detachable = "true")
 public class Order {
 	
