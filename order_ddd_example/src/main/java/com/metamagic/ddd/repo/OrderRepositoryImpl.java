@@ -61,21 +61,13 @@ public class OrderRepositoryImpl implements OrderRepository{
 	@Override
 	public Order findByOrderId(String orderId) throws Exception {
 		PersistenceManager pm = pm();
-		try
-		{
-			Query query = (pm.newQuery(Order.class));
-			query.setFilter("this.orderId==:orderId");
-			
-			@SuppressWarnings("unchecked")
-			Collection<Order> carts = (Collection<Order>) query.execute(orderId, true);
-			if(!carts.isEmpty()){
-				return pm.detachCopy(carts.iterator().next());	
-			}else{
-				throw new Exception("Unable to retrive data");
-			}
-		}
-		catch (Exception e)
-		{
+		Query query = (pm.newQuery(Order.class));
+		query.setFilter("this.orderId==:orderId");
+		query.setUnique(true);
+		Order order = (Order)query.execute(orderId, true);
+		if(order != null){
+			return order;	
+		}else{
 			throw new Exception("Unable to retrive data");
 		}
 	}
