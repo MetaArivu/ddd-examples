@@ -28,10 +28,10 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.metamagic.ddd.acl.OrderACL;
+import com.metamagic.ddd.desiralizer.OrderDesiralizer;
 import com.metamagic.ddd.exception.InvalidDataException;
 
-@JsonDeserialize(using = OrderACL.class)
+@JsonDeserialize(using = OrderDesiralizer.class)
 @PersistenceCapable(table = "order", detachable = "true")
 public class Order {
 	
@@ -48,6 +48,9 @@ public class Order {
 	@Persistent(column = "orderdate")
 	private Date orderDate;
 	
+	@Persistent(column = "total")
+	private Double total;
+	
 	@Persistent(column = "status")
 	private Status status;
 	
@@ -60,9 +63,6 @@ public class Order {
 	@Persistent(mappedBy = "order", defaultFetchGroup = "true")
 	private Payment payment;
 	
-	@Persistent(defaultFetchGroup = "true")
-	private MoneytoryValue moneytoryValue;
-	
 	/**
 	 *
 	 * @param userId {@link String}
@@ -73,6 +73,7 @@ public class Order {
 		this.generateOrderNo();
 		this.initCart();
 		this.markPaymentExepected();
+		this.total = 0.0;
 	}
 	
 	/**
@@ -107,10 +108,6 @@ public class Order {
 		this.status = Status.PAID;
 	}
 	
-	public MoneytoryValue moneytoryValue(){
-		moneytoryValue = new MoneytoryValue(getTotal(), "USD");
-		return moneytoryValue;
-	}
 	/**
 	 * Added line item to user cart
 	 * @param itemId
@@ -122,8 +119,6 @@ public class Order {
 	public void addLineItem(String itemId, String itemName, Double price, Integer quantity) throws InvalidDataException{
 		LineItem lineItem = new LineItem(itemId, itemName, price, quantity, this);
 		this.lineItems.add(lineItem);
-		this.getTotal();
-		this.moneytoryValue();
 	}
 	
 	/**
@@ -173,8 +168,7 @@ public class Order {
 	 * 
 	 * @return total {@link Double}
 	 */
-	private Double getTotal(){
-		Double total = 0.0;
+	public Double getTotal(){
 		for (Iterator iterator = lineItems.iterator(); iterator.hasNext();) {
 			LineItem lineItem = (LineItem) iterator.next();
 			System.out.println("---"+lineItem.getItemId()+"--"+lineItem.getItemName() +"--"+lineItem.getPrice() +"--"+lineItem.getQuantity());
@@ -260,13 +254,11 @@ public class Order {
 	@Override
 	public String toString() {
 		return "Order [orderId=" + orderId + ", userId=" + userId + ", orderNo=" + orderNo + ", orderDate=" + orderDate
-				+ ", status=" + status + ", lineItems=" + lineItems + ", shippingAddress=" + shippingAddress
-				+ ", payment=" + payment + ", moneytoryValue=" + moneytoryValue + "]";
+				+ ", total=" + total + ", status=" + status + ", lineItems=" + lineItems + ", shippingAddress="
+				+ shippingAddress + ", payment=" + payment + "]";
 	}
 
-
-
-
+	
 	public static enum Status {
 
 		/**
