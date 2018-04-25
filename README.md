@@ -42,3 +42,10 @@ Implement a façade or adapter layer between different subsystems that don't sha
 
 [Order Example](https://github.com/MetaArivu/DDDExamples/tree/master/order_ddd_example) focus on some of the key aspects of DDD such as. Aggregate, Entities, Value Object, Repository
 
+
+## License
+Copyright © MetaMagic Global Inc, 2017-18. All rights reserved.
+
+Licensed under the Apache 2.0 License.
+
+Enjoy!
