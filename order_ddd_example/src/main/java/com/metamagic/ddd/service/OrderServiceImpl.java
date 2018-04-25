@@ -20,6 +20,8 @@ package com.metamagic.ddd.service;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,17 +88,20 @@ public class OrderServiceImpl implements OrderService
 	 * Apply the discount based on specification specified
 	 */
 	@Override
-	public void applyDiscount() throws Exception {
+	public void applyDiscount() throws Exception 
+	{
+		
 		Collection<Order> orders = orderRepository.findAllOrders();
 
 		Specification spe = this.discountSpecification();
 		
-		for (Iterator iterator = orders.iterator(); iterator.hasNext();) {
-			Order order = (Order) iterator.next();
-			if(spe.isValid(order)){
-				System.err.println("Apply discount to order - "+order.getOrderId() +" "+order.getStatus() +" "+order.getMoneytoryValue().getTotal());
-			}
-		}
+		orders.stream()
+				.filter(order -> spe.isValid(order))
+				.forEach(order -> {
+					System.err.println(" Apply discount to order - "+order.getOrderId() 
+																	  +" "+order.getStatus() 
+																	  +" "+order.getMoneytoryValue().getTotal());
+				});
 	}
 
 	/**
@@ -104,8 +109,8 @@ public class OrderServiceImpl implements OrderService
 	 * @return {@link Specification} 
 	 */
 	private Specification discountSpecification(){
-		return new OrderStatusSpecification(Status.PAYMENT_EXPECTED).
-				or(new OrderStatusSpecification(Status.PREPARING))
+		return new OrderStatusSpecification(Status.PREPARING).
+				or(new OrderStatusSpecification(Status.PAYMENT_EXPECTED))
 				.and(new OrderAmountSpecification(5000.00));
 	}
 }
