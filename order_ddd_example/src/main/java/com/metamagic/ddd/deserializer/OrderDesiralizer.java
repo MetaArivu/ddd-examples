@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-package com.metamagic.ddd.desiralizer;
+package com.metamagic.ddd.deserializer;
 
 import java.io.IOException;
 
