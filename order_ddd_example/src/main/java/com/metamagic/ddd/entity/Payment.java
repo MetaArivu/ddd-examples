@@ -157,7 +157,7 @@ public class Payment {
 	@Override
 	public String toString() {
 		return "Payment [paymentid=" + paymentid + ", mode=" + mode + ", transactionId=" + transactionId + ", amount="
-				+ amount + ", order=" + order + "]";
+				+ amount + "]";
 	}	
 	
 

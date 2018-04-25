@@ -249,6 +249,13 @@ public class Order {
 		return lineItems;
 	}
 
+	public Status getStatus(){
+		return this.status;
+	}
+	
+	public MoneytoryValue getMoneytoryValue(){
+		return this.moneytoryValue;
+	}
 
 	@Override
 	public boolean equals(Object order) {

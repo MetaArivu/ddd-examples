@@ -15,38 +15,28 @@
  * limitations under the License.
 
 */
-package com.metamagic.ddd.repo;
 
-import java.util.Collection;
+package com.metamagic.ddd.specification;
 
 import com.metamagic.ddd.entity.Order;
+import com.metamagic.ddd.entity.Order.Status;
+import com.metamagic.ddd.specification.core.AbstractSpecification;
 
 /**
- * Repository for handling order
+ * Specification for order status
  * @author ketangote
  *
  */
-public interface OrderRepository {
+public class OrderStatusSpecification extends AbstractSpecification{
 
-	/**
-	 * Saves order
-	 * @param order
-	 */
-	public void saveOrder(Order order);
+	private Status status;
 	
-	/**
-	 * Fetch order based on order id
-	 * @param orderId
-	 * @return
-	 * @throws Exception
-	 */
-	public Order findByOrderId(String orderId) throws Exception;
-	
-	/**
-	 * Fetch all orders
-	 * @return {@link Collection<Order>}
-	 * @throws Exception
-	 */
-	public Collection<Order> findAllOrders() throws Exception;
-	
+	public OrderStatusSpecification(Status status){
+		this.status = status;
+	}
+
+	@Override
+	public boolean isValid(Object obj) {
+		return status.equals(((Order)obj).getStatus());
+	}
 }

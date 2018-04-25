@@ -52,4 +52,10 @@ public interface OrderService {
 	 * @throws Exception
 	 */
 	public void addPaymentDetails(PaymentDTO dto) throws InvalidDataException, Exception;
+	
+	/**
+	 * Prints all order based on Specification given
+	 * @throws Exception
+	 */
+	public void applyDiscount()  throws Exception;
 }

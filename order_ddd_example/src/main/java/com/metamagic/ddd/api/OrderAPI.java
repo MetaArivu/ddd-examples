@@ -75,5 +75,14 @@ public class OrderAPI {
 	public void addPaymentDetails(@RequestBody PaymentDTO dto) throws InvalidDataException, Exception{
 		orderService.addPaymentDetails(dto);
 	}
+
+	/**
+	 * Check for discount based on specification given
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "/applyDiscount", method = RequestMethod.GET)
+	public void applyDiscount() throws Exception{
+		orderService.applyDiscount();
+	}
 	
 }

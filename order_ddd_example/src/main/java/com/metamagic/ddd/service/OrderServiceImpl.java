@@ -18,14 +18,21 @@
 
 package com.metamagic.ddd.service;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.metamagic.ddd.dto.PaymentDTO;
 import com.metamagic.ddd.dto.ShippingAddressDTO;
 import com.metamagic.ddd.entity.Order;
+import com.metamagic.ddd.entity.Order.Status;
 import com.metamagic.ddd.exception.InvalidDataException;
 import com.metamagic.ddd.repo.OrderRepository;
+import com.metamagic.ddd.specification.OrderAmountSpecification;
+import com.metamagic.ddd.specification.OrderStatusSpecification;
+import com.metamagic.ddd.specification.core.Specification;
 
 /**
  * Domain Service which specifically focus on domain logic of order, implements {@link OrderService}
@@ -70,10 +77,35 @@ public class OrderServiceImpl implements OrderService
 	 */
 	@Override
 	public void addPaymentDetails(PaymentDTO dto) throws InvalidDataException, Exception {
-		// TODO Auto-generated method stub
 		Order order = orderRepository.findByOrderId(dto.getOrderId());
 		order.addPaymentDetails(dto.getPaymentmode());
 		orderRepository.saveOrder(order);	
 	}
+	
+	/**
+	 * Apply the discount based on specification specified
+	 */
+	@Override
+	public void applyDiscount() throws Exception {
+		Collection<Order> orders = orderRepository.findAllOrders();
 
+		Specification spe = this.discountSpecification();
+		
+		for (Iterator iterator = orders.iterator(); iterator.hasNext();) {
+			Order order = (Order) iterator.next();
+			if(spe.isValid(order)){
+				System.err.println("Apply discount to order - "+order.getOrderId() +" "+order.getStatus() +" "+order.getMoneytoryValue().getTotal());
+			}
+		}
+	}
+
+	/**
+	 * Return discount specification
+	 * @return {@link Specification} 
+	 */
+	private Specification discountSpecification(){
+		return new OrderStatusSpecification(Status.PAYMENT_EXPECTED).
+				or(new OrderStatusSpecification(Status.PREPARING))
+				.and(new OrderAmountSpecification(5000.00));
+	}
 }

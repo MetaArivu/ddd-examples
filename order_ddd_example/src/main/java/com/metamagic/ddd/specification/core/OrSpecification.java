@@ -15,38 +15,26 @@
  * limitations under the License.
 
 */
-package com.metamagic.ddd.repo;
-
-import java.util.Collection;
-
-import com.metamagic.ddd.entity.Order;
+package com.metamagic.ddd.specification.core;
 
 /**
- * Repository for handling order
+ * 
  * @author ketangote
  *
  */
-public interface OrderRepository {
+public class OrSpecification extends AbstractSpecification{
 
-	/**
-	 * Saves order
-	 * @param order
-	 */
-	public void saveOrder(Order order);
-	
-	/**
-	 * Fetch order based on order id
-	 * @param orderId
-	 * @return
-	 * @throws Exception
-	 */
-	public Order findByOrderId(String orderId) throws Exception;
-	
-	/**
-	 * Fetch all orders
-	 * @return {@link Collection<Order>}
-	 * @throws Exception
-	 */
-	public Collection<Order> findAllOrders() throws Exception;
-	
+	private Specification spec1;
+	private Specification spec2;
+
+	public OrSpecification(final Specification spec1, final Specification spec2) {
+		this.spec1 = spec1;
+		this.spec2 = spec2;
+	}
+
+	@Override
+	public boolean isValid(Object od) {
+		return spec1.isValid(od) || spec2.isValid(od);
+	}
+
 }

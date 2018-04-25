@@ -18,6 +18,7 @@
 package com.metamagic.ddd.repo;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -27,6 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.metamagic.ddd.entity.Order;
+import com.metamagic.ddd.entity.Order.Status;
+import com.metamagic.ddd.specification.OrderStatusSpecification;
+import com.metamagic.ddd.specification.core.Specification;
 
 /**
  * Repository for handling order implements {@link OrderRepository}
@@ -71,4 +75,19 @@ public class OrderRepositoryImpl implements OrderRepository{
 			throw new Exception("Unable to retrive data");
 		}
 	}
+	
+	/**
+	 * Fetch all orders
+	 * @return {@link Collection<Order>}
+	 * @throws Exception
+	 */
+	@Override
+	public Collection<Order> findAllOrders() throws Exception {
+		PersistenceManager pm = pm();
+		Query query = (pm.newQuery(Order.class));
+		Collection<Order> orders = (Collection<Order>)query.execute(true);
+		return orders;
+	}
+	
+	
 }

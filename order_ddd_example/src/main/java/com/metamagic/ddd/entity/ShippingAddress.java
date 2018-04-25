@@ -243,8 +243,7 @@ public class ShippingAddress {
 	@Override
 	public String toString() {
 		return "ShippingAddress [shippingAddressId=" + shippingAddressId + ", label=" + label + ", address=" + address
-				+ ", country=" + country + ", province=" + province + ", city=" + city + ", postalcode=" + postalcode
-				+ ", order=" + order + "]";
+				+ ", country=" + country + ", province=" + province + ", city=" + city + ", postalcode=" + postalcode+ "]";
 	}
 	
 	
